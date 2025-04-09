@@ -5,19 +5,15 @@ from titiler.core.errors import TilerError
 from titiler.mosaic.errors import MosaicError
 from rio_tiler.io import COGReader
 from rio_tiler.errors import RioTilerError
-import os
-from typing import Optional
 from pyproj import Transformer
 from urllib.parse import urljoin
-from rio_tiler.profiles import img_profiles
-from rio_tiler.models import ImageData
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="COG Tile Server")
 BASE_URL = "http://dronepilotapp.psi.ncsu.edu/data/"
-LOCAL_URL = "http://host.docker.internal:8080/data/"
+LOCAL_URL = "http:/127.0.0.1:8080/data/"
 
 # Add CORS middleware
 app.add_middleware(
