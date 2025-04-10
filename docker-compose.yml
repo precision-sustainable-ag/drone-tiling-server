@@ -1,0 +1,12 @@
+services:
+  cog-tile-server:
+    image: cog-tile-server
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ${DATA_PATH:-./data}:/data
+    environment:
+      - COG_STORAGE_PATH=/data
+      - ALLOWED_ORIGINS=http://localhost:3000,http://dronepilotapp.psi.ncsu.edu

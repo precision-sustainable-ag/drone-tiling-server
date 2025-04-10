@@ -3,10 +3,7 @@ titiler.core
 titiler.mosaic
 rio-tiler
 uvicorn
-python-multipart
 rasterio
-numpy
 pydantic
-morecantile
 starlette
 pyproj

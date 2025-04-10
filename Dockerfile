@@ -1,4 +1,4 @@
-FROM python:3.9.16-slim
+FROM python:3.13.3-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -8,17 +8,9 @@ RUN apt-get update && apt-get install -y \
     libgdal-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV GDAL_CACHEMAX=75%
-ENV VSI_CACHE=TRUE
-ENV VSI_CACHE_SIZE=536870912
 ENV GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
-ENV GDAL_HTTP_MERGE_CONSECUTIVE_RANGES=YES
-ENV GDAL_HTTP_MULTIPLEX=YES
-ENV GDAL_HTTP_VERSION=2
-ENV CPL_VSIL_CURL_ALLOWED_EXTENSIONS=.tif,.TIF,.tiff,.TIFF,.xml,.XML
-ENV COG_STORAGE_PATH=/data
 ENV PYTHONPATH=/app
 
 # Create and set working directory
@@ -30,9 +22,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the main.py file
 COPY main.py /app/
-
-# Create data directory
-# RUN mkdir -p /data
 
 # Expose port
 EXPOSE 8000
