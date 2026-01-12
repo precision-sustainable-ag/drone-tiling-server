@@ -5,7 +5,7 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from titiler.core.factory import TilerFactory
 from titiler.core.errors import TilerError
-from titiler.mosaic.errors import MosaicError
+from titiler.mosaic.errors import EmptyMosaicError, NoAssetFoundError
 from rio_tiler.io import COGReader
 from rio_tiler.errors import RioTilerError
 from pyproj import Transformer
@@ -19,7 +19,11 @@ app = FastAPI(title="COG Tile Server", description="A server for serving tiles o
 
 # Constants
 DATA_DIR = os.getenv("COG_STORAGE_PATH", "/data")
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS").split(",")
+
+ALLOWED_ORIGINS = [
+    o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()
+] or ["*"]
+
 DEFAULT_CACHE_CONTROL = os.getenv("DEFAULT_CACHE_CONTROL", "public, max-age=3600")
 
 # Add CORS middleware
@@ -109,7 +113,11 @@ async def validate_cog(cog_path: str):
 async def titiler_exception_handler(request, exc):
     return {"detail": str(exc)}
 
-@app.exception_handler(MosaicError)
+@app.exception_handler(EmptyMosaicError)
+async def mosaic_exception_handler(request, exc):
+    return {"detail": str(exc)}
+
+@app.exception_handler(NoAssetFoundError)
 async def mosaic_exception_handler(request, exc):
     return {"detail": str(exc)}
 

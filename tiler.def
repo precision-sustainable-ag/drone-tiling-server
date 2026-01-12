@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: python:3.13.3-slim
+
+%setup
+  mkdir -p "${APPTAINER_ROOTFS}/usr/local/usrapps/drones/drone-data-viewer"
+
+%environment
+  export PYTHONUNBUFFERED=1
+  export GDAL_CACHEMAX=75%
+  export GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
+  export PYTHONPATH=/app
+  export HOST=0.0.0.0
+  export PORT=8000
+
+%post
+  apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
+      python3-dev \
+      gdal-bin \
+      libgdal-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+  mkdir -p /app
+  cd /app
+
+  python -m pip install --upgrade pip
+  pip install --no-cache-dir -r /app/requirements.txt
+
+%files
+  requirements.txt /app/requirements.txt
+  main.py /app/main.py
+
+%runscript
+  exec uvicorn main:app --host ${HOST:-0.0.0.0} --port ${PORT:-8000}
+EOF
