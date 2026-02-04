@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from typing import Optional
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from titiler.core.factory import TilerFactory
@@ -128,7 +129,7 @@ async def riotiler_exception_handler(request, exc):
 class ErrorResponse(BaseModel):
     detail: str
     timestamp: str
-    request_id: str | None = None
+    request_id: Optional[str] = None
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -144,4 +145,5 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

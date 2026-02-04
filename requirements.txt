@@ -7,3 +7,4 @@ rasterio
 pydantic
 starlette
 pyproj
+a2wsgi==1.10.8

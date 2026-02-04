@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running on host: $(hostname)"
+echo "PORT: ${PORT}"
+
+IMAGE="/usr/local/usrapps/drones/drone-data-viewer/drone-tiling-server/containers/drone-tiler.sandbox"
+
+# Where your orthos live
+BIND_DATA="/rs1/shares/cals-research-station:/data:ro"
+
+# Allow your React app origin (add more if needed)
+export ALLOWED_ORIGINS="https://servood.hpc.ncsu.edu"
+
+apptainer run --cleanenv \
+  -B "${BIND_DATA}" \
+  --env PORT="${PORT}" \
+  --env ALLOWED_ORIGINS="${ALLOWED_ORIGINS}" \
+  "${IMAGE}"

@@ -1,0 +1,9 @@
+PassengerEnabled on
+PassengerAppEnv production
+# Tell Passenger this is a WSGI app and which file to import:
+PassengerAppType wsgi
+PassengerStartupFile passenger_wsgi.py
+# Point Passenger to the venv's Python (absolute path):
+PassengerPython /usr/local/usrapps/drones/drone-data-viewer/drone-tiling-server/.venv/bin/python
+# (Optional but helpful)
+PassengerStartTimeout 90
